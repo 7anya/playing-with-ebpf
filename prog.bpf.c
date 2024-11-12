@@ -1,8 +1,10 @@
 #include "vmlinux.h"
-//#include <linux/bpf.h>
+#include <bpf/bpf_core_read.h>
 #include <bpf/bpf_helpers.h>
-#include <bpf/bpf_core_read.h> 
-//typedef unsigned long long u64;
+#include <bpf/bpf_tracing.h>
+
+char LICENSE[] SEC("license") = "GPL";
+
 typedef unsigned int u32;
 
 struct fault_data_t {
@@ -16,7 +18,8 @@ struct {
 } ringbuf SEC(".maps");
 
 SEC("fentry/handle_mm_fault")
-int BPF_PROG(handle_mm_fault, struct vm_area_struct *vma, unsigned long address, unsigned int flags, struct pt_regs *regs ){
+int BPF_PROG(handle_mm_fault, struct vm_area_struct *vma, unsigned long address,
+             unsigned int flags, struct pt_regs *regs) {
     struct fault_data_t *data;
 
     // Reserve space in the ring buffer
@@ -31,8 +34,5 @@ int BPF_PROG(handle_mm_fault, struct vm_area_struct *vma, unsigned long address,
 
     // Submit the data to the ring buffer
     bpf_ringbuf_submit(data, 0);
-
     return 0;
 }
-
-char LICENSE[] SEC("license") = "GPL";

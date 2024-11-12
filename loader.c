@@ -17,7 +17,8 @@ struct fault_data_t {
 
 void handle_event(void *ctx, void *data, size_t data_sz) {
     struct fault_data_t *event = data;
-    printf("Faulted Address: 0x%llx, PID: %d\n", event->faulted_address, event
+    printf("Faulted Address: 0x%llx, PID: %d\n", event->faulted_address, event->pid);
+    
 }
 
 int main() {
@@ -38,7 +39,7 @@ int main() {
         return 1;
     }
 
-    struct bpf_program *prog = bpf_object__find_program_by_title(obj, "fentry/
+    struct bpf_program *prog = bpf_object__find_program_by_title(obj, "fentry/handle_mm_fault");
     if (!prog) {
         fprintf(stderr, "Failed to find BPF program\n");
         return 1;
