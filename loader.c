@@ -15,10 +15,10 @@ struct fault_data_t {
     u32 pid;
 };
 
-void handle_event(void *ctx, void *data, size_t data_sz) {
+int handle_event(void *ctx, void *data, size_t data_sz) {
     struct fault_data_t *event = data;
     printf("Faulted Address: 0x%llx, PID: %d\n", event->faulted_address, event->pid);
-    
+    return 0;
 }
 
 int main() {
@@ -39,7 +39,7 @@ int main() {
         return 1;
     }
 
-    struct bpf_program *prog = bpf_object__find_program_by_title(obj, "fentry/handle_mm_fault");
+    struct bpf_program *prog = bpf_object__find_program_by_name(obj, "fentry/handle_mm_fault");
     if (!prog) {
         fprintf(stderr, "Failed to find BPF program\n");
         return 1;
