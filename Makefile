@@ -12,7 +12,7 @@ all: $(BPF_PROG) $(USER_PROG)
 # Build the eBPF object file
 $(BPF_PROG): prog.bpf.c
 	$(BPF_CLANG) $(BPF_CFLAGS) -c $< -o $@
-	$(BPF_LLVM_OBJCOPY) --strip-all $@
+	$(BPF_LLVM_OBJCOPY) $@
 
 # Build the user-space loader
 $(USER_PROG): loader.c
