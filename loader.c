@@ -39,7 +39,7 @@ int main() {
         return 1;
     }
 
-    struct bpf_program *prog = bpf_object__find_program_by_name(obj, "fentry/handle_mm_fault");
+    struct bpf_program *prog = bpf_object__find_program_by_name(obj, "handle_mm_fault");
     if (!prog) {
         fprintf(stderr, "Failed to find BPF program\n");
         return 1;
